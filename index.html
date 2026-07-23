@@ -64,6 +64,7 @@ h1.title{ font-family:'Orbitron',sans-serif; font-size:32px; color:var(--text-li
 .overlay{ position:fixed; inset:0; z-index:50; background:rgba(0,0,10,.75); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; opacity:0; visibility:hidden; pointer-events:none; transition:opacity .3s ease; padding:20px; }
 .overlay.active{ opacity:1; visibility:visible; pointer-events:auto; }
 .modal-box{ width:100%; max-width:400px; max-height:82vh; overflow-y:auto; background:linear-gradient(180deg, #0a0330, #050018); border:1px solid var(--card-border); border-radius:20px; padding:22px; box-shadow:0 0 40px rgba(138,43,226,.35); position:relative; }
+#adUnlockOverlay .modal-box{ max-width:460px; }
 .modal-box h2{ font-family:'Orbitron',sans-serif; font-size:17px; margin:0 0 14px 0; color:var(--text-light); }
 textarea{ width:100%; min-height:90px; resize:vertical; background:rgba(255,255,255,.05); border:1px solid var(--card-border); border-radius:12px; color:var(--text-light); font-family:'Vazirmatn',sans-serif; font-size:14px; padding:12px; margin-bottom:10px; }
 input[type=password], input[type=text].modal-input{ width:100%; background:rgba(255,255,255,.05); border:1px solid var(--card-border); border-radius:12px; color:var(--text-light); font-family:'Orbitron',sans-serif; font-size:16px; letter-spacing:2px; padding:14px; margin-bottom:10px; text-align:center; }
@@ -204,7 +205,7 @@ input[type=password], input[type=text].modal-input{ width:100%; background:rgba(
     <button class="close-x" id="closeAdUnlock">✕</button>
     <h2 data-i18n="adUnlockTitle">در حال باز شدن...</h2>
     <div class="hint" style="margin-bottom:12px;" data-i18n="adUnlockHint">چند لحظه صبر کن تا تبلیغ کامل نمایش داده بشه</div>
-    <div id="adUnlockSlot" style="min-height:100px; display:flex; align-items:center; justify-content:center;"></div>
+    <div id="adUnlockSlot" style="min-height:250px; display:flex; align-items:center; justify-content:center; border-radius:16px; overflow:hidden; background:rgba(255,255,255,.03); border:1px solid var(--card-border);"></div>
     <div class="hint" id="adUnlockOfflineMsg" style="display:none;" data-i18n="needsInternet"></div>
     <div class="modal-actions">
       <button class="btn btn-primary" id="btnAdUnlockContinue" disabled data-i18n="btnAdUnlockWait">۶</button>
@@ -670,7 +671,7 @@ function openAdUnlockFlow(){
   }
   offlineMsg.style.display = 'none';
   loadYektanetAds();
-  slot.innerHTML = '<div class="yn-bnr" id="ynpos-19453-adunlock"></div>';
+  slot.innerHTML = '<div class="yn-bnr" id="ynpos-19467" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;"></div>';
   let remaining = AD_UNLOCK_SECONDS;
   continueBtn.textContent = t('btnAdUnlockWait')(remaining);
   adUnlockCountdownInterval = setInterval(()=>{
