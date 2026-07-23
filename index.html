@@ -502,29 +502,16 @@
     justify-content:center;
   }
 
-  /* ---------- AD BOX (main menu) ---------- */
+  /* ---------- AD BOX (main menu) — normal in-flow element, anchored right ---------- */
   #menuAdBar{
-    position:fixed;
-    bottom:12px; right:12px;
-    display:flex; align-items:center; justify-content:center;
     width:150px;
-    max-height:220px;
+    margin-left:auto;
+    margin-right:0;
+    margin-top:10px;
     overflow:hidden;
-    padding:0;
     background:rgba(5,0,20,.55);
-    backdrop-filter:blur(8px);
     border:1px solid var(--card-border);
     border-radius:14px;
-    z-index:15;
-    opacity:0;
-    transform:translateY(10px);
-    pointer-events:none;
-    transition:opacity .5s ease, transform .5s ease;
-  }
-  #menuAdBar.show{
-    opacity:1;
-    transform:translateY(0);
-    pointer-events:auto;
   }
   #menuAadsSlot{ width:100%; }
 </style>
@@ -981,11 +968,7 @@ function goToScreen(id){
   document.getElementById(id).classList.add('active');
   closeMorePopup();
   if(id === 'menu'){
-    if(aadsLoaded){
-      document.getElementById('menuAdBar').classList.add('show');
-    } else {
-      loadAadsAd();
-    }
+    loadAadsAd();
   }
 }
 
@@ -1409,7 +1392,6 @@ function loadAadsAd(){
       </style>
     </div>
   `;
-  document.getElementById('menuAdBar').classList.add('show');
 }
 
 let yektanetLoaded = false;
