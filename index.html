@@ -6,9 +6,6 @@
 <title>AZ | بازی جاسوس</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
-<script>
-            !function(e,t,n){e.yektanetAnalyticsObject=n,e[n]=e[n]||function(){e[n].q.push(arguments)},e[n].q=e[n].q||[];var a=t.getElementsByTagName("head")[0],r=new Date,c="https://cdn.yektanet.com/superscript/maBJUt8k/native-thefreepay.github.io-43835/yn_pub.js?v="+r.getFullYear().toString()+"0"+r.getMonth()+"0"+r.getDate()+"0"+r.getHours(),s=t.createElement("link");s.rel="preload",s.as="script",s.href=c,a.appendChild(s);var l=t.createElement("script");l.async=!0,l.src=c,a.appendChild(l)}(window,document,"yektanet");
-        </script>
 <style>
   :root{
     --bg-deep:#000022;
@@ -476,6 +473,8 @@
     position:fixed;
     bottom:0; left:0; right:0;
     display:flex; align-items:center; justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
     padding:8px 10px calc(8px + env(safe-area-inset-bottom));
     background:rgba(5,0,20,.55);
     backdrop-filter:blur(8px);
@@ -493,6 +492,14 @@
   }
   #adBannerWrap .yn-bnr{
     max-width:100%;
+  }
+  .ad-slot{
+    flex:1 1 45%;
+    min-width:130px;
+    max-width:260px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
   }
 </style>
 </head>
@@ -674,7 +681,10 @@
   <button class="btn btn-danger" id="btnEndGame" style="max-width:200px;" data-i18n="btnEndGame">پایان بازی</button>
 
   <div id="adBannerWrap">
-    <div class="yn-bnr" id="ynpos-19453"></div>
+    <div class="ad-slot" id="ynSlot">
+      <div class="yn-bnr" id="ynpos-19453"></div>
+    </div>
+    <div class="ad-slot" id="aadsSlot"></div>
   </div>
 </div>
 
@@ -1330,12 +1340,52 @@ function scheduleAdReveal(){
   adWrap.classList.remove('show');
   clearTimeout(adRevealTimeout);
   adRevealTimeout = setTimeout(()=>{
-    adWrap.classList.add('show');
+    /* فقط وقتی آنلاینه اسکریپت/فریم تبلیغ رو صدا می‌زنیم؛
+       آفلاین بود، هیچ درخواستی نمی‌ره و بازی بدون خطا ادامه پیدا می‌کنه */
+    if(navigator.onLine){
+      loadYektanetAds();
+      loadAadsAd();
+      adWrap.classList.add('show');
+    }
   }, 15000);
 }
 function hideAdBanner(){
   clearTimeout(adRevealTimeout);
   document.getElementById('adBannerWrap').classList.remove('show');
+}
+
+let aadsLoaded = false;
+function loadAadsAd(){
+  if(aadsLoaded) return;
+  aadsLoaded = true;
+  const slot = document.getElementById('aadsSlot');
+  slot.innerHTML = `
+    <div style="position:relative; width:100%; text-align:center; font-size:0;">
+      <input autocomplete="off" type="checkbox" id="aadsstickymrxanwae" hidden />
+      <div id="aadsFrameWrap" style="position:relative; width:100%;">
+        <label for="aadsstickymrxanwae" style="position:absolute; top:4px; right:4px; border-radius:4px; background:rgba(248,248,249,.7); padding:4px; z-index:2; cursor:pointer;">
+          <svg fill="#000000" height="14px" width="14px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 490 490">
+            <polygon points="456.851,0 245,212.564 33.149,0 0.708,32.337 212.669,245.004 0.708,457.678 33.149,490 245,277.443 456.851,490 489.292,457.678 277.331,245.004 489.292,32.337 "/>
+          </svg>
+        </label>
+        <iframe data-aa="2448868" src="//acceptable.a-ads.com/2448868/?size=Adaptive&background_color=000022&title_color=0bcef7&title_hover_color=581b7e&text_color=634dc6&link_color=270ad0&link_hover_color=a90ac4" style="border:0; padding:0; width:100%; height:auto; overflow:hidden; margin:auto; display:block;"></iframe>
+      </div>
+      <style>
+        #aadsstickymrxanwae:checked + #aadsFrameWrap{ display:none; }
+      </style>
+    </div>
+  `;
+}
+
+let yektanetLoaded = false;
+function loadYektanetAds(){
+  if(yektanetLoaded) return;
+  yektanetLoaded = true;
+  try{
+    !function(e,t,n){e.yektanetAnalyticsObject=n,e[n]=e[n]||function(){e[n].q.push(arguments)},e[n].q=e[n].q||[];var a=t.getElementsByTagName("head")[0],r=new Date,c="https://cdn.yektanet.com/superscript/maBJUt8k/native-thefreepay.github.io-43835/yn_pub.js?v="+r.getFullYear().toString()+"0"+r.getMonth()+"0"+r.getDate()+"0"+r.getHours(),s=t.createElement("link");s.rel="preload",s.as="script",s.href=c,a.appendChild(s);var l=t.createElement("script");l.async=!0,l.onerror=function(){ yektanetLoaded=false; };l.src=c,a.appendChild(l)}(window,document,"yektanet");
+  }catch(err){
+    yektanetLoaded = false;
+  }
 }
 function updateTimerDisplay(){
   const m = Math.floor(timerSeconds/60).toString().padStart(2,'0');
