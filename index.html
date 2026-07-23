@@ -501,6 +501,30 @@
     align-items:center;
     justify-content:center;
   }
+
+  /* ---------- AD BAR (main menu) ---------- */
+  #menuAdBar{
+    position:fixed;
+    bottom:0; left:0; right:0;
+    display:flex; align-items:center; justify-content:center;
+    max-height:56px;
+    overflow:hidden;
+    padding:4px 10px calc(4px + env(safe-area-inset-bottom));
+    background:rgba(5,0,20,.55);
+    backdrop-filter:blur(8px);
+    border-top:1px solid var(--card-border);
+    z-index:15;
+    opacity:0;
+    transform:translateY(10px);
+    pointer-events:none;
+    transition:opacity .5s ease, transform .5s ease;
+  }
+  #menuAdBar.show{
+    opacity:1;
+    transform:translateY(0);
+    pointer-events:auto;
+  }
+  #menuAadsSlot{ width:100%; max-width:320px; }
 </style>
 </head>
 <body>
@@ -570,6 +594,10 @@
       <div class="field-sub" data-i18n="drunkHint">۰ یعنی غیرفعال — شهروند مست کلمه‌ای متفاوت از بقیه می‌گیرد</div>
     </div>
     <div class="hint" id="menuHint"></div>
+  </div>
+
+  <div id="menuAdBar">
+    <div id="menuAadsSlot"></div>
   </div>
 </div>
 
@@ -681,10 +709,7 @@
   <button class="btn btn-danger" id="btnEndGame" style="max-width:200px;" data-i18n="btnEndGame">پایان بازی</button>
 
   <div id="adBannerWrap">
-    <div class="ad-slot" id="ynSlot">
-      <div class="yn-bnr" id="ynpos-19453"></div>
-    </div>
-    <div class="ad-slot" id="aadsSlot"></div>
+    <div class="yn-bnr" id="ynpos-19453"></div>
   </div>
 </div>
 
@@ -953,6 +978,13 @@ function goToScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   closeMorePopup();
+  if(id === 'menu'){
+    if(aadsLoaded){
+      document.getElementById('menuAdBar').classList.add('show');
+    } else {
+      loadAadsAd();
+    }
+  }
 }
 
 /* ================= WORD LIST ================= */
@@ -1340,11 +1372,10 @@ function scheduleAdReveal(){
   adWrap.classList.remove('show');
   clearTimeout(adRevealTimeout);
   adRevealTimeout = setTimeout(()=>{
-    /* فقط وقتی آنلاینه اسکریپت/فریم تبلیغ رو صدا می‌زنیم؛
+    /* فقط وقتی آنلاینه اسکریپت تبلیغ رو صدا می‌زنیم؛
        آفلاین بود، هیچ درخواستی نمی‌ره و بازی بدون خطا ادامه پیدا می‌کنه */
     if(navigator.onLine){
       loadYektanetAds();
-      loadAadsAd();
       adWrap.classList.add('show');
     }
   }, 15000);
@@ -1357,8 +1388,9 @@ function hideAdBanner(){
 let aadsLoaded = false;
 function loadAadsAd(){
   if(aadsLoaded) return;
+  if(!navigator.onLine) return;
   aadsLoaded = true;
-  const slot = document.getElementById('aadsSlot');
+  const slot = document.getElementById('menuAadsSlot');
   slot.innerHTML = `
     <div style="position:relative; width:100%; text-align:center; font-size:0;">
       <input autocomplete="off" type="checkbox" id="aadsstickymrxanwae" hidden />
@@ -1375,6 +1407,7 @@ function loadAadsAd(){
       </style>
     </div>
   `;
+  document.getElementById('menuAdBar').classList.add('show');
 }
 
 let yektanetLoaded = false;
